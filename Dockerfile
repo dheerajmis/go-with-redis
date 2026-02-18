@@ -19,8 +19,8 @@ FROM debian:bookworm-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/url-shortner .
-COPY --from=builder /app/.env .
+COPY --from=builder /app/url-shortner/go-with-redis .
+COPY --from=builder /app/url-shortner/go-with-redis .env .
 
 EXPOSE 8080
 
