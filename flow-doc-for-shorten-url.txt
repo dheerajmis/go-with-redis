@@ -1,0 +1,37 @@
+1) Request Flow 
+    1.1) Go -> MySql insert -> Redis
+        Generate code
+        Insert into MySQL (code, long_url)
+        Cache in Redis: SET url:{code} {long_url} EX 86400 (example 1 day)
+        Return short URL
+
+        data first store at shorten_urls_tbl
+            CREATE TABLE shorten_urls_tbl (
+                id INT auto_increment primary key,
+                code VARCHAR(100) UNIQUE NOT NULL,
+                long_url TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                expire_at TIMESTAMP DEFAULT NULL,
+                total_clicks_on_url BIGINT NOT NULL
+            )
+
+        What redis will do here
+            Cache for redirects
+            Counter for rate limiting
+            Pattern and fallback
+
+2) Redirect Flow
+    2.1) Go -> Redis First -> MySQL fallback
+        Try redis first
+        If found -> redirect immediately 
+        If not found -> read from MySQL
+        If MySQL found -> SET url: {code} {long_url} -> Redirect
+        INCR click in redis
+
+3) Redis Key points learned from this project
+    3.1) Caching
+        TTL
+        Automatic counter
+        Rate Limit Keys
+        Handling Cache Miss
+        Key naming conventions
