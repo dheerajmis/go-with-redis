@@ -1,11 +1,11 @@
-version: "3.9"
-
 services:
   app:
     build: .
     container_name: url_shortener_app
+    env_file:
+      - .env
     ports:
-      - "80:8080"
+      - "8080:8080"
     depends_on:
       - redis
       - mysql
