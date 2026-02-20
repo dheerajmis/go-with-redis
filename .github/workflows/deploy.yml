@@ -1,11 +1,16 @@
 name: Deploy code to server
 
 on:
-  push:
-    branches: ["main"]
+  pull_request:
+    types: [closed]
+    branches: 
+      - main
 
 jobs:
   deploy:
+    if: |
+      github.event.pull_request.merged == true &&
+      github.repository == 'dheerajsinghjeena/go-with-redis'
     runs-on: ubuntu-latest
 
     steps:
